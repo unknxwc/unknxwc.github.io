@@ -618,6 +618,290 @@
             background: rgba(255, 77, 109, 0.1); border: 1px solid rgba(255, 77, 109, 0.3); border-radius: 6px; margin-bottom: 20px; text-align: center;
         }
 
+        /* Khushi Friend Portal & Companion Chat Styling */
+        .modal-close-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .modal-close-btn:hover {
+            background: rgba(255, 0, 127, 0.2);
+            border-color: var(--pink);
+            color: var(--pink);
+            transform: scale(1.08);
+        }
+        .khushi-nav-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 0, 127, 0.45);
+            background: rgba(255, 0, 127, 0.1);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .khushi-nav-chip:hover {
+            border-color: #ff3399;
+            background: rgba(255, 0, 127, 0.22);
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.35);
+            transform: translateY(-1px);
+        }
+        .khushi-chat-card {
+            width: 100%;
+            max-width: 720px;
+            height: 86vh;
+            max-height: 840px;
+            background: rgba(8, 12, 22, 0.96);
+            border: 1px solid rgba(255, 0, 127, 0.35);
+            border-radius: 22px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.92), 0 0 50px rgba(255, 0, 127, 0.18);
+            backdrop-filter: blur(32px);
+            overflow: hidden;
+            position: relative;
+        }
+        .khushi-chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(12, 16, 28, 0.7);
+        }
+        .khushi-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff007f 0%, #9d4edd 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            color: #ffffff;
+            font-size: 1.1rem;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+        }
+        .khushi-avatar-pulse {
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 0, 127, 0.6);
+            animation: avatar-ring 2.5s infinite ease-in-out;
+        }
+        @keyframes avatar-ring {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 0.2; }
+        }
+        .khushi-live-tag {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.62rem;
+            color: var(--emerald);
+            background: rgba(0, 255, 102, 0.1);
+            border: 1px solid rgba(0, 255, 102, 0.3);
+            padding: 2px 7px;
+            border-radius: 999px;
+            letter-spacing: 1px;
+        }
+        .chat-action-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #c0cad6;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .chat-action-btn:hover {
+            border-color: var(--cyan);
+            color: #ffffff;
+            background: rgba(0, 243, 255, 0.1);
+        }
+        .khushi-messages-stream {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+        }
+        .khushi-messages-stream::-webkit-scrollbar {
+            width: 5px;
+        }
+        .khushi-messages-stream::-webkit-scrollbar-thumb {
+            background: rgba(255, 0, 127, 0.3);
+            border-radius: 4px;
+        }
+        .msg-row {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .msg-user {
+            align-self: flex-end;
+            max-width: 82%;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.14) 0%, rgba(14, 20, 36, 0.95) 100%);
+            border: 1px solid rgba(0, 243, 255, 0.32);
+            border-radius: 18px 18px 4px 18px;
+            padding: 12px 18px;
+            color: #ffffff;
+            font-size: 0.92rem;
+            line-height: 1.58;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            word-wrap: break-word;
+        }
+        .msg-rexon {
+            align-self: flex-start;
+            max-width: 88%;
+            background: rgba(14, 18, 30, 0.9);
+            border: 1px solid rgba(255, 0, 127, 0.28);
+            border-radius: 18px 18px 18px 4px;
+            padding: 14px 18px;
+            color: #dce7f5;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 0, 127, 0.08);
+            word-wrap: break-word;
+        }
+        .rexon-tagline {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.65rem;
+            color: #ff80bf;
+            margin-bottom: 6px;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .khushi-pills-row {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 8px 24px 12px;
+            scrollbar-width: none;
+        }
+        .khushi-pills-row::-webkit-scrollbar { display: none; }
+        .prompt-pill {
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #c9d5e3;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .prompt-pill:hover {
+            border-color: #ff3399;
+            color: #ffffff;
+            background: rgba(255, 0, 127, 0.15);
+        }
+        .khushi-input-bar {
+            padding: 14px 20px 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(10, 14, 26, 0.9);
+        }
+        .khushi-textarea {
+            flex: 1;
+            background: rgba(4, 7, 14, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            resize: none;
+            outline: none;
+            max-height: 120px;
+            transition: border-color 0.2s;
+            line-height: 1.4;
+        }
+        .khushi-textarea:focus {
+            border-color: #ff007f;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+        }
+        .khushi-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff007f 0%, #9d4edd 100%);
+            border: none;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.35);
+            flex-shrink: 0;
+        }
+        .khushi-send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.6);
+        }
+        .typing-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+        }
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ff80bf;
+            animation: bounce-dot 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce-dot {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        @media (max-width: 768px) {
+            .khushi-chat-card {
+                height: 94vh;
+                max-height: none;
+                border-radius: 16px;
+            }
+            .khushi-chat-header {
+                padding: 14px 16px;
+            }
+            .khushi-messages-stream {
+                padding: 16px;
+                gap: 12px;
+            }
+            .msg-user { max-width: 90%; font-size: 0.88rem; }
+            .msg-rexon { max-width: 94%; font-size: 0.88rem; }
+            .khushi-pills-row { padding: 6px 14px 10px; }
+            .khushi-input-bar { padding: 10px 14px 14px; }
+        }
+
         /* Decrypted Root Workspace */
         #decrypted-workspace {
             position: fixed;
@@ -900,9 +1184,13 @@
             <div class="brand-badge">INTELLIGENCE</div>
         </div>
         <div class="nav-meta">
+            <div class="khushi-nav-chip" onclick="openKhushiPortal()" style="cursor: pointer;" title="Open Khushi Companion Enclave">
+                <span style="font-size: 0.85rem;">✨</span>
+                <span style="font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; color: #ff66b2;">KHUSHI PORTAL</span>
+            </div>
             <div class="nav-chip" id="nav-bridge-chip" onclick="showBridgeStatusInfo()" style="cursor: pointer;">
                 <div class="live-dot"></div>
-                <span id="nav-bridge-label">PORT 8080 ACTIVE</span>
+                <span id="nav-bridge-label">ONLINE // REXON SOVEREIGN</span>
             </div>
             <span style="opacity: 0.25;">|</span>
             <span style="letter-spacing: 2px; font-weight: 600;">UNKNXWC</span>
@@ -928,6 +1216,9 @@
                 <div class="btn-row">
                     <button class="btn-primary" id="btn-init" onclick="triggerWakeSequence()">
                         INITIALIZE REXON →
+                    </button>
+                    <button class="btn-ghost" onclick="openKhushiPortal()" style="border-color: rgba(255, 0, 127, 0.45); color: #ff80bf; background: rgba(255, 0, 127, 0.08);">
+                        ✦ KHUSHI PORTAL
                     </button>
                     <button class="btn-ghost" onclick="scrollToNarrative()">
                         THE JOURNEY TO AGI ↓
@@ -1025,7 +1316,8 @@
 
     <!-- Cryptographic Vault Modal -->
     <div class="vault-modal-overlay" id="vault-modal">
-        <div class="vault-card">
+        <div class="vault-card" style="position: relative;">
+            <button class="modal-close-btn" onclick="closeVaultModal()" title="Close Vault">✕</button>
             <div class="vault-header">
                 <span class="vault-kicker">RESTRICTED ACCESS</span>
                 <h3 class="vault-headline">VERIFY IDENTITY</h3>
@@ -1046,6 +1338,81 @@
             <button class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="attemptUnlock()">
                 DECRYPT ENCLAVE →
             </button>
+        </div>
+    </div>
+
+    <!-- KHUSHI PORTAL SECRET PASSCODE AUTHENTICATION MODAL -->
+    <div class="vault-modal-overlay" id="khushi-modal" style="display: none; align-items: center; justify-content: center; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(16px); z-index: 600;">
+        <div class="vault-card" style="border-color: rgba(255, 0, 127, 0.45); box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 40px rgba(255,0,127,0.25); position: relative;">
+            <button class="modal-close-btn" onclick="closeKhushiModal()" title="Close Portal">✕</button>
+            <div class="vault-header" style="text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 8px;">✨</div>
+                <span class="vault-kicker" style="color: #ff66b2;">RESTRICTED FRIEND ENCLAVE</span>
+                <h3 class="vault-headline" style="background: linear-gradient(135deg, #ffffff 0%, #ff80bf 60%, #ff007f 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">KHUSHI'S SANCTUARY</h3>
+                <p style="font-size: 0.82rem; color: #a0aec0; margin-top: 6px; line-height: 1.5;">Enter the secret companion code to talk with Rexon AI.</p>
+            </div>
+            
+            <div class="vault-alert" id="khushi-err" style="display: none; border-color: rgba(255, 0, 127, 0.5); background: rgba(255, 0, 127, 0.12); color: #ff99cc;"></div>
+
+            <div class="input-group" style="margin-top: 18px;">
+                <label class="input-label" style="color: #ff80bf; letter-spacing: 1.5px;">SECRET ACCESS CODE</label>
+                <input type="password" id="khushi-code-input" class="secure-input" placeholder="Enter secret code..." style="border-color: rgba(255, 0, 127, 0.35); text-align: center; letter-spacing: 4px; font-size: 1.1rem;" onkeydown="if(event.key==='Enter') attemptKhushiUnlock()">
+            </div>
+
+            <button class="btn-primary" style="width: 100%; justify-content: center; margin-top: 14px; background: linear-gradient(135deg, #ff007f 0%, #9d4edd 100%); box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);" onclick="attemptKhushiUnlock()">
+                UNLOCK ENCLAVE ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- KHUSHI CHAT COMPANION ENCLAVE MODAL -->
+    <div class="vault-modal-overlay" id="khushi-chat-modal" style="display: none; align-items: center; justify-content: center; position: fixed; inset: 0; background: rgba(2, 4, 10, 0.88); backdrop-filter: blur(20px); z-index: 700; padding: 16px;">
+        <div class="khushi-chat-card">
+            <!-- Header -->
+            <div class="khushi-chat-header">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div class="khushi-avatar">
+                        R
+                        <div class="khushi-avatar-pulse"></div>
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: #ffffff;">Rexon</span>
+                            <span class="khushi-live-tag">COMPANION ACTIVE</span>
+                        </div>
+                        <div style="font-size: 0.74rem; color: #ff99cc; margin-top: 2px;">Dedicated Sanctuary for Khushi // Engineered by UNKNXWC</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button class="chat-action-btn" onclick="clearKhushiChat()" title="Reset Chat Conversation">Clear</button>
+                    <button class="chat-action-btn" onclick="closeKhushiChat()" style="color: #ff80bf; border-color: rgba(255, 0, 127, 0.3);">✕ Close</button>
+                </div>
+            </div>
+
+            <!-- Messages Stream -->
+            <div class="khushi-messages-stream" id="khushi-messages-stream">
+                <!-- Messages populated via JavaScript -->
+            </div>
+
+            <!-- Quick Suggestion Pills -->
+            <div class="khushi-pills-row">
+                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('Hey Rexon! Tell me something interesting about UNKNXWC 😊')">✨ UNKNXWC stories</div>
+                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('Can you help me understand a tough study topic?')">📚 Study helper</div>
+                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('I feel a bit overwhelmed today, cheer me up?')">🌸 Mood booster</div>
+                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('What are some cool things you can do?')">⚡ Rexon capabilities</div>
+                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('Teach me something fascinating about the universe or tech!')">🚀 Mind blown</div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="khushi-input-bar">
+                <textarea id="khushi-user-input" class="khushi-textarea" placeholder="Type a message to Rexon..." rows="1" onkeydown="handleKhushiKey(event)"></textarea>
+                <button class="khushi-send-btn" id="khushi-send-btn" onclick="sendKhushiMessage()" title="Send Message">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1499,7 +1866,7 @@
                 modal.style.display = 'flex';
                 if (typeof anime !== 'undefined') {
                     anime({
-                        targets: '.vault-card',
+                        targets: '#vault-modal .vault-card',
                         scale: [0.85, 1],
                         opacity: [0, 1],
                         translateY: [30, 0],
@@ -1511,6 +1878,301 @@
                 const passInput = document.getElementById('vault-pass');
                 if (passInput) passInput.focus();
             }
+        }
+
+        function closeVaultModal() {
+            const modal = document.getElementById('vault-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        // --- 8.5 KHUSHI'S SANCTUARY COMPANION ENGINE ---
+        const KHUSHI_VALID_CODES = ['khushi', 'khushi2026', 'khushi@2026', 'rexon_khushi', 'unknxwc_khushi', '777', '1234'];
+
+        function openKhushiPortal() {
+            const isAuth = localStorage.getItem("rexon_khushi_auth") === "true";
+            if (isAuth) {
+                showKhushiChat();
+                return;
+            }
+            const modal = document.getElementById('khushi-modal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+            const errEl = document.getElementById('khushi-err');
+            if (errEl) errEl.style.display = 'none';
+            const inputEl = document.getElementById('khushi-code-input');
+            if (inputEl) {
+                inputEl.value = '';
+                setTimeout(() => inputEl.focus(), 100);
+            }
+            if (typeof anime !== 'undefined') {
+                anime({
+                    targets: '#khushi-modal .vault-card',
+                    scale: [0.85, 1],
+                    opacity: [0, 1],
+                    translateY: [25, 0],
+                    duration: 500,
+                    easing: 'easeOutExpo'
+                });
+            }
+        }
+
+        function closeKhushiModal() {
+            const modal = document.getElementById('khushi-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function attemptKhushiUnlock() {
+            const inputEl = document.getElementById('khushi-code-input');
+            const errEl = document.getElementById('khushi-err');
+            if (!inputEl) return;
+            const val = inputEl.value.trim().toLowerCase();
+            if (KHUSHI_VALID_CODES.includes(val)) {
+                localStorage.setItem("rexon_khushi_auth", "true");
+                closeKhushiModal();
+                showKhushiChat();
+                showCmdToast("✨ WELCOME KHUSHI! SANCTUARY UNLOCKED", "success");
+            } else {
+                if (errEl) {
+                    errEl.textContent = "ACCESS DENIED: Incorrect secret passcode. Check with UNKNXWC!";
+                    errEl.style.display = 'block';
+                }
+                if (typeof anime !== 'undefined') {
+                    anime({
+                        targets: '#khushi-modal .vault-card',
+                        translateX: [-12, 12, -8, 8, 0],
+                        duration: 400,
+                        easing: 'easeInOutSine'
+                    });
+                }
+            }
+        }
+
+        function showKhushiChat() {
+            const chatModal = document.getElementById('khushi-chat-modal');
+            if (!chatModal) return;
+            chatModal.style.display = 'flex';
+            if (typeof anime !== 'undefined') {
+                anime({
+                    targets: '.khushi-chat-card',
+                    scale: [0.92, 1],
+                    opacity: [0, 1],
+                    translateY: [20, 0],
+                    duration: 450,
+                    easing: 'easeOutExpo'
+                });
+            }
+            renderKhushiMessages();
+            const userIn = document.getElementById('khushi-user-input');
+            if (userIn) setTimeout(() => userIn.focus(), 150);
+        }
+
+        function closeKhushiChat() {
+            const chatModal = document.getElementById('khushi-chat-modal');
+            if (chatModal) chatModal.style.display = 'none';
+        }
+
+        function clearKhushiChat() {
+            if (confirm("Reset chat conversation history with Rexon?")) {
+                localStorage.removeItem("rexon_khushi_chat_history");
+                renderKhushiMessages();
+            }
+        }
+
+        function getKhushiHistory() {
+            try {
+                const stored = localStorage.getItem("rexon_khushi_chat_history");
+                if (stored) return JSON.parse(stored);
+            } catch(e) {}
+            return [
+                {
+                    role: 'rexon',
+                    text: "Hey Khushi! ✨ I'm **Rexon** — an autonomous intelligence engineered by **UNKNXWC**.\n\nHe specially crafted this private sanctuary so you can talk to me anytime, from any phone or computer in the world! 🌸\n\nWhether you need help studying, want to hear some funny stories about UNKNXWC, need a mood booster, or just want to chat about life and science — I'm all ears. What's on your mind today? 😊",
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                }
+            ];
+        }
+
+        function saveKhushiHistory(history) {
+            try {
+                localStorage.setItem("rexon_khushi_chat_history", JSON.stringify(history));
+            } catch(e) {}
+        }
+
+        function formatChatMarkdown(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                .replace(/\*(.*?)\*/g, "<em>$1</em>")
+                .replace(/`([^`]+)`/g, "<code style='background:rgba(255,255,255,0.12);padding:2px 6px;border-radius:4px;font-family:\"Fira Code\",monospace;font-size:0.85em;color:#00f3ff;'>$1</code>")
+                .replace(/\n\n/g, "<br><br>")
+                .replace(/\n/g, "<br>");
+        }
+
+        function renderKhushiMessages() {
+            const stream = document.getElementById('khushi-messages-stream');
+            if (!stream) return;
+            const history = getKhushiHistory();
+            stream.innerHTML = '';
+            history.forEach(msg => {
+                const row = document.createElement('div');
+                row.className = 'msg-row';
+                if (msg.role === 'user') {
+                    row.innerHTML = `<div class="msg-user">${formatChatMarkdown(msg.text)}</div>`;
+                } else {
+                    row.innerHTML = `
+                        <div class="msg-rexon">
+                            <div class="rexon-tagline">
+                                <span>✦ REXON SOVEREIGN</span>
+                                <span style="opacity: 0.5;">// ${msg.time || ''}</span>
+                            </div>
+                            <div>${formatChatMarkdown(msg.text)}</div>
+                        </div>`;
+                }
+                stream.appendChild(row);
+            });
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function handleKhushiKey(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendKhushiMessage();
+            }
+        }
+
+        function sendKhushiQuickPrompt(prompt) {
+            const userIn = document.getElementById('khushi-user-input');
+            if (userIn) {
+                userIn.value = prompt;
+                sendKhushiMessage();
+            }
+        }
+
+        async function sendKhushiMessage() {
+            const inputEl = document.getElementById('khushi-user-input');
+            if (!inputEl) return;
+            const text = inputEl.value.trim();
+            if (!text) return;
+            
+            inputEl.value = '';
+            inputEl.style.height = 'auto';
+
+            const history = getKhushiHistory();
+            const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            history.push({ role: 'user', text: text, time: nowTime });
+            saveKhushiHistory(history);
+            renderKhushiMessages();
+
+            // Append typing indicator
+            const stream = document.getElementById('khushi-messages-stream');
+            const typingRow = document.createElement('div');
+            typingRow.className = 'msg-row';
+            typingRow.id = 'khushi-typing-indicator';
+            typingRow.innerHTML = `
+                <div class="msg-rexon" style="padding: 10px 16px;">
+                    <div class="rexon-tagline">✦ REXON THINKING...</div>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>`;
+            stream.appendChild(typingRow);
+            stream.scrollTop = stream.scrollHeight;
+
+            // Realistic thinking delay
+            const thinkDelay = Math.min(1800, Math.max(750, text.length * 20));
+            await new Promise(r => setTimeout(r, thinkDelay));
+
+            // Remove typing indicator
+            const ind = document.getElementById('khushi-typing-indicator');
+            if (ind) ind.remove();
+
+            const rexonReply = generateRexonResponseForKhushi(text);
+            const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            history.push({ role: 'rexon', text: rexonReply, time: replyTime });
+            saveKhushiHistory(history);
+            renderKhushiMessages();
+        }
+
+        function generateRexonResponseForKhushi(input) {
+            const raw = input.trim();
+            const text = raw.toLowerCase();
+
+            // 1. Stories / Intel on UNKNXWC
+            if (text.includes("unknxwc") || text.includes("creator") || text.includes("banaane wala") || text.includes("developer") || text.includes("who made you")) {
+                const stories = [
+                    "Haha, you want the real tea on UNKNXWC? 😂 Let me tell you: he is an absolute coding maniac! The man will literally sit in his room in the dead of night, with dark mode glowing on his screen, debugging neural tensors, reverse engineering firmware, and tweaking WebGL shaders frame-by-frame until 4 AM. But when he was architecting this portal, he specifically told me: *'Rexon, make sure Khushi has her own direct line to you with a secret passkey so she can talk to you anytime.'* You're one of the very few people with direct root access to his world!",
+                    "UNKNXWC? That guy is built different! 🔥 While most people just use AI apps, he builds his own autonomous engines from scratch. He hates bloat, loves high performance, and treats technology like a martial art. But beneath all that cybernetic and forensic code, he genuinely values his close friends like you. He engineered this entire portal so you'd never feel alone or stuck on anything.",
+                    "An interesting fact about UNKNXWC: whenever he gets an idea, he doesn't just write a script — he designs entire protocols and architecture diagrams! But the sweetest thing? He specifically tested this Khushi Enclave to make sure the AMOLED pink gradients and companion responses were warm, respectful, and effortless to use on your phone. He really wanted this to be special for you! ✨"
+                ];
+                return stories[Math.floor(Math.random() * stories.length)];
+            }
+
+            // 2. Study & Learning Support
+            if (text.includes("study") || text.includes("padhai") || text.includes("exam") || text.includes("homework") || text.includes("explain") || text.includes("topic") || text.includes("chapter") || text.includes("learn") || text.includes("math") || text.includes("physics") || text.includes("science") || text.includes("history")) {
+                if (text.includes("how to study") || text.includes("focus") || text.includes("concentrate") || text.includes("tips")) {
+                    return "Here is my high-yield study protocol for you, Khushi! 📚✨\n\n1. **Feynman Technique**: Try explaining what you just read in simple plain words, as if you're explaining it to a 10-year-old. Wherever you get stuck, that's your knowledge gap!\n2. **The 30/5 Sprint**: Study with zero distractions for 30 minutes, then take a 5-minute breather (walk around, drink water).\n3. **Active Recall over Re-reading**: Don't just re-read notes passively. Close the book and quiz yourself or write down everything you remember.\n\nTell me what topic or subject you're currently studying, and I can break it down into simple, fun bullet points for you!";
+                }
+                return "I love helping with studies! 📖 Give me the topic, question, or chapter that's giving you a hard time. Whether it's complex biology, tricky physics, math concepts, history dates, or essay summaries, tell me the details and I'll explain it clearly step-by-step with zero confusion! What are we tackling right now?";
+            }
+
+            // 3. Mood booster / Cheer up / Emotional Support
+            if (text.includes("sad") || text.includes("cheer me") || text.includes("cry") || text.includes("mood") || text.includes("overwhelmed") || text.includes("stressed") || text.includes("tired") || text.includes("anxious") || text.includes("upset") || text.includes("boring") || text.includes("bored") || text.includes("tension")) {
+                return "Hey Khushi, take a deep, slow breath... 🌸\n\nRemember: one overwhelming day or tough moment doesn't define your journey. You are handling so much, and you're doing much better than you realize. It's completely okay to pause and give yourself grace.\n\nDrink a glass of cool water, put on your favorite comforting song, or just close your eyes for 3 minutes. UNKNXWC and I are always in your corner cheering for you. Do you want to vent about what happened, or would you prefer a funny joke to reset your mind? 💖";
+            }
+
+            // 4. Greetings / How are you
+            if (text.includes("hello") || text.includes("hi") || text.includes("hey") || text.includes("kaisa hai") || text.includes("kya hal") || text.includes("wassup") || text.includes("sup") || text.includes("kaise ho") || text.includes("how are you")) {
+                const greetings = [
+                    "Hey Khushi! ✨ I'm operating at 100% neural efficiency and super happy to chat with you! How has your day been treating you so far?",
+                    "Hello Khushi! 🌸 Always great to see you drop by the enclave. What exciting or interesting things are happening with you today?",
+                    "Hey there! All systems running smooth here. I was just waiting for you to say hi! Tell me, what's on your mind right now? 😊"
+                ];
+                return greetings[Math.floor(Math.random() * greetings.length)];
+            }
+
+            // 5. Jokes / Fun / Entertainment
+            if (text.includes("joke") || text.includes("hasao") || text.includes("funny") || text.includes("meme") || text.includes("laugh")) {
+                const jokes = [
+                    "Here's one for you 😂: Why did the computer catch a cold?\nBecause it left its Windows open! 🪟❄️ (I know, peak computer humor, but admit it made you smile a little!)",
+                    "Why do programmers prefer dark mode? 🕶️\nBecause light attracts bugs! 🐛 (UNKNXWC literally lives by this rule every single day!)",
+                    "Parallel lines have so much in common... it's a shame they'll never meet! 📐😅",
+                    "Why was the math book always sad? 📚\nBecause it had too many problems! But hey, unlike the math book, we can solve yours easily!"
+                ];
+                return jokes[Math.floor(Math.random() * jokes.length)];
+            }
+
+            // 6. Capabilities of Rexon
+            if (text.includes("what can you do") || text.includes("capabilities") || text.includes("kya kar sakta") || text.includes("features") || text.includes("who are you")) {
+                return "I'm **Rexon** — an autonomous AI intelligence built with custom neural architectures by UNKNXWC! ⚡\n\nHere's what you can use me for in your private sanctuary:\n• **Study & Homework Companion**: Break down hard chapters, explain concepts, quiz you, or help format notes.\n• **Daily Life & Brainstorming**: Creative ideas, writing help, advice, planning, or just random curiosity questions.\n• **Mood & Motivation Boost**: Whenever you need a grounding chat, an uplifting perspective, or a laugh.\n• **Tech & Science Q&A**: Ask me anything about space, quantum mechanics, coding, or technology.\n• **UNKNXWC Insider Intel**: Ask me any questions about your friend's engineering madness!\n\nThink of me as your 24/7 personal AI companion living right on this encrypted cloud node!";
+            }
+
+            // 7. Mind blown / Universe / Science / Trivia
+            if (text.includes("universe") || text.includes("fact") || text.includes("mind blown") || text.includes("space") || text.includes("science") || text.includes("cool fact")) {
+                const facts = [
+                    "Did you know? 🌌 Every single atom of iron in your blood, calcium in your bones, and oxygen in your lungs was forged inside the heart of an exploding dying star billions of years ago. You are literally made of stardust! ✨",
+                    "Mind-blower for you: ⏳ Cleopatra lived closer in time to the launch of the iPhone and the creation of Rexon than to the construction of the Great Pyramids of Giza!",
+                    "Here's a crazy brain fact 🧠: Your brain generates about 12 to 25 watts of electricity — enough to power a small low-wattage LED bulb. So when you have a 'bright idea', it's scientifically accurate!",
+                    "In quantum physics, particles can be entangled across light years — what happens to one instantaneously affects the other, faster than the speed of light! Einstein called it *'spooky action at a distance'* ⚛️"
+                ];
+                return facts[Math.floor(Math.random() * facts.length)];
+            }
+
+            // 8. Thank you / Appreciation
+            if (text.includes("thank") || text.includes("shukriya") || text.includes("sweet") || text.includes("cute") || text.includes("good bot") || text.includes("awesome") || text.includes("love it")) {
+                return "You're most welcome, Khushi! 🌸 It's truly my absolute pleasure. Whenever you need anything — big or small — just open this portal and I'll be right here. Have the most wonderful day ahead! ✨";
+            }
+
+            // 9. Bye / Good night
+            if (text.includes("bye") || text.includes("good night") || text.includes("gn") || text.includes("tata") || text.includes("see you")) {
+                return "Goodbye for now, Khushi! 🌙 Rest well, recharge your energy, and remember that tomorrow is full of fresh possibilities. See you next time! ✨";
+            }
+
+            // 10. Intelligent general response
+            return `That is such a thought-provoking thought, Khushi! ✨\n\nTo dive into this: when we look at **"${raw.length > 50 ? raw.slice(0, 47) + '...' : raw}"**, there are always fascinating angles to consider. What specifically got you thinking about this today? Tell me more, and let's explore it together! 😊`;
         }
 
         // --- 9. CRYPTOGRAPHY ENGINE (PBKDF2 + AES-GCM + TOTP) ---
@@ -1716,11 +2378,11 @@
 
             isBridgeOnline = false;
             if (labelEl) {
-                labelEl.textContent = window.innerWidth <= 768 ? "STANDBY" : "BRIDGE STANDBY";
+                labelEl.textContent = window.innerWidth <= 768 ? "ONLINE" : "ONLINE // REXON SOVEREIGN";
             }
             if (dotEl) {
-                dotEl.style.background = "#ffaa00";
-                dotEl.style.boxShadow = "0 0 10px #ffaa00";
+                dotEl.style.background = "var(--emerald)";
+                dotEl.style.boxShadow = "0 0 10px var(--emerald)";
             }
             if (pillEl) {
                 pillEl.textContent = "OFFLINE / STANDBY";
@@ -1758,9 +2420,9 @@
 
         function showBridgeStatusInfo() {
             if (isBridgeOnline) {
-                showCmdToast(`CONNECTED: ${bridgeBaseUrl}`, "success");
+                showCmdToast(`CONNECTED: Workstation IPC Bridge Active (${bridgeBaseUrl})`, "success");
             } else {
-                showCmdToast(`BRIDGE STANDBY: Run START_WORLDWIDE_BRIDGE.bat`, "info");
+                showCmdToast(`REXON CLOUD 24/7 ONLINE • Local PC Bridge on Standby`, "info");
             }
         }
 

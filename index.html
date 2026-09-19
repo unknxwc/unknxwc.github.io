@@ -2481,17 +2481,28 @@ CORE INSTRUCTIONS & PERSONALITY:
 
             // Dispatch directly to Antigravity PC Bridge so message arrives in Antigravity chat as a command!
             const bridgePayload = JSON.stringify({ sender: friendName, text: text });
-            fetch("https://sin-sms-lobby-belfast.trycloudflare.com/api/v1/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: bridgePayload
-            }).catch(() => {
-                fetch("http://127.0.0.1:8080/api/v1/chat", {
+            (async function forwardToBridge() {
+                let targetUrl = "https://rachel-commission-enabling-powerpoint.trycloudflare.com";
+                try {
+                    const r = await fetch('bridge_endpoint.txt?t=' + Date.now());
+                    if (r.ok) {
+                        const ep = (await r.text()).trim();
+                        if (ep.startsWith('http')) targetUrl = ep;
+                    }
+                } catch(e) {}
+
+                fetch(targetUrl + "/api/v1/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: bridgePayload
-                }).catch(() => {});
-            });
+                }).catch(() => {
+                    fetch("http://127.0.0.1:8080/api/v1/chat", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: bridgePayload
+                    }).catch(() => {});
+                });
+            })();
 
             const rexonReply = await callRexonGeminiBrain(history, text, friendName);
 

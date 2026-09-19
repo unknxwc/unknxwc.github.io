@@ -2266,6 +2266,7 @@
             }
 
             renderFriendMessages();
+            startFriendLiveBridgeSync();
             const userIn = document.getElementById('friend-user-input');
             if (userIn) setTimeout(() => userIn.focus(), 150);
         }
@@ -2333,10 +2334,14 @@
                 if (msg.role === 'user') {
                     row.innerHTML = `<div class="msg-user">${formatChatMarkdown(msg.text)}</div>`;
                 } else {
+                    const isAntigravity = msg.sender && (msg.sender.includes("Antigravity") || msg.sender.includes("PC Core"));
+                    const badge = isAntigravity ? "✦ ANTIGRAVITY // PC WORKSTATION" : "✦ REXON SOVEREIGN";
+                    const glowStyle = isAntigravity ? 'border-color: rgba(0, 243, 255, 0.4); box-shadow: 0 0 15px rgba(0,243,255,0.15);' : '';
+                    const badgeStyle = isAntigravity ? 'color: #00f3ff; font-weight: 700; text-shadow: 0 0 8px rgba(0,243,255,0.4);' : '';
                     row.innerHTML = `
-                        <div class="msg-rexon">
+                        <div class="msg-rexon" style="${glowStyle}">
                             <div class="rexon-tagline">
-                                <span>✦ REXON SOVEREIGN</span>
+                                <span style="${badgeStyle}">${badge}</span>
                                 <span style="opacity: 0.5;">// ${msg.time || ''}</span>
                             </div>
                             <div>${formatChatMarkdown(msg.text)}</div>
@@ -2445,6 +2450,47 @@ CORE INSTRUCTIONS & PERSONALITY:
             return generateRexonResponseForFriend(userText);
         }
 
+        function startFriendLiveBridgeSync() {
+            if (window.friendBridgeInterval) return;
+            window.friendBridgeInterval = setInterval(async () => {
+                const chatModal = document.getElementById('friend-chat-modal');
+                if (!chatModal || chatModal.style.display !== 'flex') return;
+                try {
+                    let targetUrl = "https://rachel-commission-enabling-powerpoint.trycloudflare.com";
+                    try {
+                        const r = await fetch('bridge_endpoint.txt?t=' + Date.now());
+                        if (r.ok) {
+                            const ep = (await r.text()).trim();
+                            if (ep.startsWith('http')) targetUrl = ep;
+                        }
+                    } catch(e) {}
+                    
+                    const poll = await fetch(targetUrl + "/api/v1/chat/messages?t=" + Date.now());
+                    if (poll.ok) {
+                        const data = await poll.json();
+                        const msgs = data.messages || [];
+                        if (msgs.length > 0) {
+                            const last = msgs[msgs.length - 1];
+                            if (last.role === 'ai') {
+                                const currentHistory = getFriendHistory();
+                                const alreadySeen = currentHistory.some(m => m.role === 'rexon' && m.text === last.text);
+                                if (!alreadySeen) {
+                                    currentHistory.push({
+                                        role: 'rexon',
+                                        sender: last.sender || "Antigravity (PC Core)",
+                                        text: last.text,
+                                        time: last.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                                    });
+                                    saveFriendHistory(currentHistory);
+                                    renderFriendMessages();
+                                }
+                            }
+                        }
+                    }
+                } catch(e) {}
+            }, 2500);
+        }
+
         async function sendFriendMessage() {
             const inputEl = document.getElementById('friend-user-input');
             if (!inputEl) return;
@@ -2466,12 +2512,12 @@ CORE INSTRUCTIONS & PERSONALITY:
             typingRow.className = 'msg-row';
             typingRow.id = 'friend-typing-indicator';
             typingRow.innerHTML = `
-                <div class="msg-rexon" style="padding: 10px 16px;">
-                    <div class="rexon-tagline">✦ REXON GENERATING THOUGHTS...</div>
+                <div class="msg-rexon" style="padding: 10px 16px; border-color: rgba(0, 243, 255, 0.3);">
+                    <div class="rexon-tagline" style="color: #00f3ff;">✦ ROUTING COMMAND TO ANTIGRAVITY ON PC...</div>
                     <div class="typing-dots">
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
+                        <div class="typing-dot" style="background:#00f3ff;"></div>
+                        <div class="typing-dot" style="background:#00f3ff;"></div>
+                        <div class="typing-dot" style="background:#00f3ff;"></div>
                     </div>
                 </div>`;
             stream.appendChild(typingRow);
@@ -2479,38 +2525,74 @@ CORE INSTRUCTIONS & PERSONALITY:
 
             const friendName = getFriendName();
 
-            // Dispatch directly to Antigravity PC Bridge so message arrives in Antigravity chat as a command!
-            const bridgePayload = JSON.stringify({ sender: friendName, text: text });
-            (async function forwardToBridge() {
-                let targetUrl = "https://rachel-commission-enabling-powerpoint.trycloudflare.com";
-                try {
-                    const r = await fetch('bridge_endpoint.txt?t=' + Date.now());
-                    if (r.ok) {
-                        const ep = (await r.text()).trim();
-                        if (ep.startsWith('http')) targetUrl = ep;
-                    }
-                } catch(e) {}
+            // 1. Resolve Target Tunnel URL
+            let targetUrl = "https://rachel-commission-enabling-powerpoint.trycloudflare.com";
+            try {
+                const r = await fetch('bridge_endpoint.txt?t=' + Date.now());
+                if (r.ok) {
+                    const ep = (await r.text()).trim();
+                    if (ep.startsWith('http')) targetUrl = ep;
+                }
+            } catch(e) {}
 
-                fetch(targetUrl + "/api/v1/chat", {
+            const bridgePayload = JSON.stringify({ sender: friendName, text: text });
+            
+            // 2. Dispatch command to worldwide bridge
+            let bridgeSent = false;
+            try {
+                const postRes = await fetch(targetUrl + "/api/v1/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: bridgePayload
-                }).catch(() => {
-                    fetch("http://127.0.0.1:8080/api/v1/chat", {
+                });
+                if (postRes.ok) bridgeSent = true;
+            } catch(e) {
+                try {
+                    const localRes = await fetch("http://127.0.0.1:8080/api/v1/chat", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: bridgePayload
-                    }).catch(() => {});
-                });
-            })();
+                    });
+                    if (localRes.ok) {
+                        bridgeSent = true;
+                        targetUrl = "http://127.0.0.1:8080";
+                    }
+                } catch(e2) {}
+            }
 
-            const rexonReply = await callRexonGeminiBrain(history, text, friendName);
+            // 3. Poll bridge for Antigravity's reply (up to 3 attempts)
+            let antReply = null;
+            let antSender = "Antigravity (PC Core)";
+            if (bridgeSent) {
+                for (let i = 0; i < 3; i++) {
+                    await new Promise(r => setTimeout(r, 1200));
+                    try {
+                        const poll = await fetch(targetUrl + "/api/v1/chat/messages?t=" + Date.now());
+                        if (poll.ok) {
+                            const data = await poll.json();
+                            const msgs = data.messages || [];
+                            if (msgs.length > 0) {
+                                const last = msgs[msgs.length - 1];
+                                if (last.role === 'ai') {
+                                    antReply = last.text;
+                                    antSender = last.sender || "Antigravity (PC Core)";
+                                    break;
+                                }
+                            }
+                        }
+                    } catch(pe) {}
+                }
+            }
+
+            // 4. If Antigravity PC replied, use it! Otherwise fallback to intelligent Gemini companion
+            const finalReply = antReply || await callRexonGeminiBrain(history, text, friendName);
+            const finalSender = antReply ? antSender : "Rexon Companion";
 
             const ind = document.getElementById('friend-typing-indicator');
             if (ind) ind.remove();
 
             const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            history.push({ role: 'rexon', text: rexonReply, time: replyTime });
+            history.push({ role: 'rexon', sender: finalSender, text: finalReply, time: replyTime });
             saveFriendHistory(history);
             renderFriendMessages();
         }

@@ -2478,6 +2478,21 @@ CORE INSTRUCTIONS & PERSONALITY:
             stream.scrollTop = stream.scrollHeight;
 
             const friendName = getFriendName();
+
+            // Dispatch directly to Antigravity PC Bridge so message arrives in Antigravity chat as a command!
+            const bridgePayload = JSON.stringify({ sender: friendName, text: text });
+            fetch("https://sin-sms-lobby-belfast.trycloudflare.com/api/v1/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: bridgePayload
+            }).catch(() => {
+                fetch("http://127.0.0.1:8080/api/v1/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: bridgePayload
+                }).catch(() => {});
+            });
+
             const rexonReply = await callRexonGeminiBrain(history, text, friendName);
 
             const ind = document.getElementById('friend-typing-indicator');

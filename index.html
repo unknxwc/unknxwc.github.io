@@ -1357,19 +1357,43 @@
 
             <!-- View 1: Email Input Form -->
             <div id="friend-view-email">
+                <!-- Active Session Banner if already verified -->
+                <div id="friend-active-session-banner" style="display: none; background: rgba(255, 0, 127, 0.08); border: 1px solid rgba(255, 0, 127, 0.35); border-radius: 12px; padding: 12px 14px; margin-top: 14px; text-align: center;">
+                    <div style="font-size: 0.7rem; color: #ff80bf; font-family: 'Fira Code', monospace; letter-spacing: 1px;">● CURRENT ACTIVE COMPANION SESSION</div>
+                    <div id="friend-active-email-text" style="font-weight: 600; color: #ffffff; font-size: 0.88rem; margin: 4px 0; word-break: break-all;"></div>
+                    <div style="display: flex; gap: 8px; justify-content: center; margin-top: 8px;">
+                        <button onclick="showFriendChat()" class="btn-primary" style="padding: 6px 14px; font-size: 0.76rem; background: linear-gradient(135deg, #00f3ff 0%, #ff007f 100%);">
+                            💬 Resume Chat →
+                        </button>
+                        <button onclick="clearFriendSession()" class="btn-ghost" style="padding: 6px 12px; font-size: 0.76rem; color: #a0aec0; border-color: rgba(255,255,255,0.2);">
+                            Switch Account
+                        </button>
+                    </div>
+                </div>
+
                 <div class="input-group" style="margin-top: 18px;">
                     <label class="input-label" style="color: #ff80bf; letter-spacing: 1.5px;">YOUR EMAIL ADDRESS</label>
-                    <input type="email" id="friend-email-input" class="secure-input" placeholder="name@gmail.com" style="border-color: rgba(255, 0, 127, 0.35); text-align: center; font-size: 0.95rem;" onkeydown="if(event.key==='Enter') handleEmailVerification()">
+                    <input type="email" id="friend-email-input" class="secure-input" placeholder="friend@gmail.com" style="border-color: rgba(255, 0, 127, 0.35); text-align: center; font-size: 0.95rem;" onkeydown="if(event.key==='Enter') handleEmailVerification()">
                 </div>
 
                 <button class="btn-primary" id="btn-verify-email" style="width: 100%; justify-content: center; margin-top: 14px; background: linear-gradient(135deg, #ff007f 0%, #9d4edd 100%); box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);" onclick="handleEmailVerification()">
                     VERIFY EMAIL &amp; GET LINK →
                 </button>
 
-                <div style="text-align: center; margin-top: 16px;">
-                    <span style="font-size: 0.76rem; color: #8b949e; cursor: pointer; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='#ff80bf'" onmouseout="this.style.color='#8b949e'" onclick="switchFriendView('passkey')">
-                        🔑 Have a secret passkey instead? Enter code
-                    </span>
+                <!-- INSTANT ONE-TAP ACCESS FOR KHUSHI & GUESTS -->
+                <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center;">
+                    <div style="font-size: 0.74rem; color: #a0aec0; margin-bottom: 8px;">⚡ Fast Pass (Talk directly with zero setup):</div>
+                    <button class="btn-ghost" style="width: 100%; justify-content: center; font-size: 0.8rem; border-color: rgba(0, 243, 255, 0.45); color: #00f3ff; background: rgba(0, 243, 255, 0.08); font-weight: 600;" onclick="launchInstantGuestFriend('Khushi')">
+                        🚀 TALK TO REXON DIRECTLY (KHUSHI FAST PASS)
+                    </button>
+                    <div style="margin-top: 10px; display: flex; justify-content: center; gap: 14px;">
+                        <span style="font-size: 0.74rem; color: #8b949e; cursor: pointer; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='#00f3ff'" onmouseout="this.style.color='#8b949e'" onclick="copyInstantDirectLink()">
+                            📋 Copy 1-Tap Link for Khushi
+                        </span>
+                        <span style="font-size: 0.74rem; color: #8b949e; cursor: pointer; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='#ff80bf'" onmouseout="this.style.color='#8b949e'" onclick="switchFriendView('passkey')">
+                            🔑 Enter Passkey
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -1444,7 +1468,8 @@
                         <div id="friend-chat-sublabel" style="font-size: 0.74rem; color: #ff99cc; margin-top: 2px;">Dedicated Sanctuary for Friends // Engineered by UNKNXWC</div>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button class="chat-action-btn" onclick="openFriendPortal()" title="Switch Account / Enter Email">Switch</button>
                     <button class="chat-action-btn" onclick="clearFriendChat()" title="Reset Chat Conversation">Clear</button>
                     <button class="chat-action-btn" onclick="closeFriendChat()" style="color: #ff80bf; border-color: rgba(255, 0, 127, 0.3);">✕ Close</button>
                 </div>
@@ -1970,6 +1995,29 @@
         async function checkMagicLinkAuth() {
             try {
                 const params = new URLSearchParams(window.location.search);
+                
+                // 1. Instant 1-Tap Direct Bypass for Khushi / Friends (?friend=direct, ?friend=instant, ?khushi=1, ?chat=direct)
+                const friendParam = (params.get('friend') || '').toLowerCase();
+                const chatParam = (params.get('chat') || '').toLowerCase();
+                const khushiParam = (params.get('khushi') || '').toLowerCase();
+
+                if (friendParam === 'direct' || friendParam === 'instant' || friendParam === 'khushi' ||
+                    chatParam === 'direct' || chatParam === 'instant' ||
+                    khushiParam === '1' || khushiParam === 'true') {
+                    
+                    localStorage.setItem("rexon_friend_auth", "true");
+                    localStorage.setItem("rexon_friend_email", "khushi@rexon.ai");
+                    const cleanUrl = window.location.origin + window.location.pathname;
+                    window.history.replaceState({}, document.title, cleanUrl);
+                    
+                    setTimeout(() => {
+                        showFriendChat();
+                        showCmdToast("✨ INSTANT COMPANION UNLOCKED — WELCOME KHUSHI!", "success");
+                    }, 400);
+                    return;
+                }
+
+                // 2. Cryptographic Magic Link Verification (?friend_auth=TOKEN&email=...)
                 const authParam = params.get('friend_auth');
                 const emailParam = params.get('email');
                 if (authParam && emailParam) {
@@ -1979,8 +2027,10 @@
                         localStorage.setItem("rexon_friend_email", emailParam);
                         const cleanUrl = window.location.origin + window.location.pathname;
                         window.history.replaceState({}, document.title, cleanUrl);
-                        showFriendChat();
-                        showCmdToast(`✨ WELCOME ${emailParam.split('@')[0].toUpperCase()}! ACCESS VERIFIED`, "success");
+                        setTimeout(() => {
+                            showFriendChat();
+                            showCmdToast(`✨ WELCOME ${emailParam.split('@')[0].toUpperCase()}! ACCESS VERIFIED`, "success");
+                        }, 400);
                     } else {
                         showCmdToast("INVALID ACCESS LINK: Please verify email again.", "error");
                     }
@@ -1991,26 +2041,42 @@
         }
 
         function openFriendPortal() {
-            const isAuth = localStorage.getItem("rexon_friend_auth") === "true";
-            if (isAuth) {
-                showFriendChat();
-                return;
-            }
+            closeFriendChat();
             const modal = document.getElementById('friend-modal');
             if (!modal) return;
             switchFriendView('email');
+
+            // Explicitly set display and fade-in opacity so modal is 100% visible
             modal.style.display = 'flex';
+            setTimeout(() => { modal.style.opacity = '1'; }, 20);
+
             const errEl = document.getElementById('friend-err');
             if (errEl) errEl.style.display = 'none';
+
+            // Show active session banner if already authenticated
+            const isAuth = localStorage.getItem("rexon_friend_auth") === "true";
+            const savedEmail = localStorage.getItem("rexon_friend_email") || '';
+            const sessionBanner = document.getElementById('friend-active-session-banner');
+            const sessionText = document.getElementById('friend-active-email-text');
+            if (sessionBanner && sessionText) {
+                if (isAuth && savedEmail) {
+                    sessionText.textContent = savedEmail;
+                    sessionBanner.style.display = 'block';
+                } else {
+                    sessionBanner.style.display = 'none';
+                }
+            }
+
             const emailInput = document.getElementById('friend-email-input');
             if (emailInput) {
-                emailInput.value = localStorage.getItem("rexon_friend_email") || '';
-                setTimeout(() => emailInput.focus(), 100);
+                emailInput.value = '';
+                setTimeout(() => emailInput.focus(), 150);
             }
+
             if (typeof anime !== 'undefined') {
                 anime({
                     targets: '#friend-modal .vault-card',
-                    scale: [0.85, 1],
+                    scale: [0.88, 1],
                     opacity: [0, 1],
                     translateY: [25, 0],
                     duration: 500,
@@ -2021,7 +2087,42 @@
 
         function closeFriendModal() {
             const modal = document.getElementById('friend-modal');
-            if (modal) modal.style.display = 'none';
+            if (modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => { modal.style.display = 'none'; }, 250);
+            }
+        }
+
+        function clearFriendSession() {
+            localStorage.removeItem("rexon_friend_auth");
+            localStorage.removeItem("rexon_friend_email");
+            const banner = document.getElementById('friend-active-session-banner');
+            if (banner) banner.style.display = 'none';
+            const emailIn = document.getElementById('friend-email-input');
+            if (emailIn) {
+                emailIn.value = '';
+                emailIn.focus();
+            }
+            showCmdToast("Session cleared. Enter a new email address.", "info");
+        }
+
+        function launchInstantGuestFriend(name = "Khushi") {
+            localStorage.setItem("rexon_friend_auth", "true");
+            localStorage.setItem("rexon_friend_email", `${name.toLowerCase()}@rexon.ai`);
+            closeFriendModal();
+            showFriendChat();
+            showCmdToast(`⚡ INSTANT ACCESS GRANTED — WELCOME ${name.toUpperCase()}!`, "success");
+        }
+
+        function copyInstantDirectLink() {
+            const origin = window.location.origin.includes('http') ? window.location.origin : 'https://unknxwc.github.io';
+            const pathname = window.location.pathname.startsWith('/') ? window.location.pathname : '/';
+            const directLink = `${origin}${pathname}?friend=direct`;
+            navigator.clipboard.writeText(directLink).then(() => {
+                showCmdToast("📋 1-TAP LINK COPIED! SEND TO KHUSHI ON WHATSAPP", "success");
+            }).catch(() => {
+                showCmdToast(`DIRECT LINK: ${directLink}`, "info");
+            });
         }
 
         function switchFriendView(view) {
@@ -2142,9 +2243,11 @@
         }
 
         function showFriendChat() {
+            closeFriendModal();
             const chatModal = document.getElementById('friend-chat-modal');
             if (!chatModal) return;
             chatModal.style.display = 'flex';
+            setTimeout(() => { chatModal.style.opacity = '1'; }, 20);
             if (typeof anime !== 'undefined') {
                 anime({
                     targets: '.khushi-chat-card',
@@ -2158,9 +2261,15 @@
 
             const email = localStorage.getItem("rexon_friend_email") || "";
             const sublabel = document.getElementById('friend-chat-sublabel');
-            if (sublabel && email) {
-                const name = email.split('@')[0];
-                sublabel.textContent = `Dedicated Sanctuary for ${name.charAt(0).toUpperCase() + name.slice(1)} // Engineered by UNKNXWC`;
+            if (sublabel) {
+                if (email.toLowerCase().includes("khushi")) {
+                    sublabel.textContent = "Dedicated Sanctuary for Khushi // Engineered by UNKNXWC";
+                } else if (email) {
+                    const name = email.split('@')[0];
+                    sublabel.textContent = `Dedicated Sanctuary for ${name.charAt(0).toUpperCase() + name.slice(1)} // Engineered by UNKNXWC`;
+                } else {
+                    sublabel.textContent = "Dedicated Sanctuary for Friends // Engineered by UNKNXWC";
+                }
             }
 
             renderFriendMessages();
@@ -2170,7 +2279,10 @@
 
         function closeFriendChat() {
             const chatModal = document.getElementById('friend-chat-modal');
-            if (chatModal) chatModal.style.display = 'none';
+            if (chatModal) {
+                chatModal.style.opacity = '0';
+                setTimeout(() => { chatModal.style.display = 'none'; }, 250);
+            }
         }
 
         function clearFriendChat() {

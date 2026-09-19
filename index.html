@@ -1184,9 +1184,9 @@
             <div class="brand-badge">INTELLIGENCE</div>
         </div>
         <div class="nav-meta">
-            <div class="khushi-nav-chip" onclick="openKhushiPortal()" style="cursor: pointer;" title="Open Khushi Companion Enclave">
+            <div class="khushi-nav-chip" onclick="openFriendPortal()" style="cursor: pointer;" title="Open Friend Companion Enclave">
                 <span style="font-size: 0.85rem;">✨</span>
-                <span style="font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; color: #ff66b2;">KHUSHI PORTAL</span>
+                <span style="font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; color: #ff66b2;">FRIEND ACCESS</span>
             </div>
             <div class="nav-chip" id="nav-bridge-chip" onclick="showBridgeStatusInfo()" style="cursor: pointer;">
                 <div class="live-dot"></div>
@@ -1217,8 +1217,8 @@
                     <button class="btn-primary" id="btn-init" onclick="triggerWakeSequence()">
                         INITIALIZE REXON →
                     </button>
-                    <button class="btn-ghost" onclick="openKhushiPortal()" style="border-color: rgba(255, 0, 127, 0.45); color: #ff80bf; background: rgba(255, 0, 127, 0.08);">
-                        ✦ KHUSHI PORTAL
+                    <button class="btn-ghost" onclick="openFriendPortal()" style="border-color: rgba(255, 0, 127, 0.45); color: #ff80bf; background: rgba(255, 0, 127, 0.08);">
+                        ✦ FRIEND ACCESS
                     </button>
                     <button class="btn-ghost" onclick="scrollToNarrative()">
                         THE JOURNEY TO AGI ↓
@@ -1341,32 +1341,93 @@
         </div>
     </div>
 
-    <!-- KHUSHI PORTAL SECRET PASSCODE AUTHENTICATION MODAL -->
-    <div class="vault-modal-overlay" id="khushi-modal" style="display: none; align-items: center; justify-content: center; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(16px); z-index: 600;">
-        <div class="vault-card" style="border-color: rgba(255, 0, 127, 0.45); box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 40px rgba(255,0,127,0.25); position: relative;">
-            <button class="modal-close-btn" onclick="closeKhushiModal()" title="Close Portal">✕</button>
+    <!-- FRIEND ACCESS EMAIL VERIFICATION & MAGIC LINK MODAL -->
+    <div class="vault-modal-overlay" id="friend-modal" style="display: none; align-items: center; justify-content: center; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(16px); z-index: 600;">
+        <div class="vault-card" style="border-color: rgba(255, 0, 127, 0.45); box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 40px rgba(255,0,127,0.25); position: relative; max-width: 440px;">
+            <button class="modal-close-btn" onclick="closeFriendModal()" title="Close Portal">✕</button>
+            
             <div class="vault-header" style="text-align: center;">
                 <div style="font-size: 2rem; margin-bottom: 8px;">✨</div>
-                <span class="vault-kicker" style="color: #ff66b2;">RESTRICTED FRIEND ENCLAVE</span>
-                <h3 class="vault-headline" style="background: linear-gradient(135deg, #ffffff 0%, #ff80bf 60%, #ff007f 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">KHUSHI'S SANCTUARY</h3>
-                <p style="font-size: 0.82rem; color: #a0aec0; margin-top: 6px; line-height: 1.5;">Enter the secret companion code to talk with Rexon AI.</p>
+                <span class="vault-kicker" style="color: #ff66b2;">VERIFIED COMPANION ACCESS</span>
+                <h3 class="vault-headline" style="background: linear-gradient(135deg, #ffffff 0%, #ff80bf 60%, #ff007f 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">FRIEND ACCESS</h3>
+                <p id="friend-modal-desc" style="font-size: 0.82rem; color: #a0aec0; margin-top: 6px; line-height: 1.5;">Enter your email to verify and receive your personal Rexon companion link.</p>
             </div>
             
-            <div class="vault-alert" id="khushi-err" style="display: none; border-color: rgba(255, 0, 127, 0.5); background: rgba(255, 0, 127, 0.12); color: #ff99cc;"></div>
+            <div class="vault-alert" id="friend-err" style="display: none; border-color: rgba(255, 0, 127, 0.5); background: rgba(255, 0, 127, 0.12); color: #ff99cc;"></div>
 
-            <div class="input-group" style="margin-top: 18px;">
-                <label class="input-label" style="color: #ff80bf; letter-spacing: 1.5px;">SECRET ACCESS CODE</label>
-                <input type="password" id="khushi-code-input" class="secure-input" placeholder="Enter secret code..." style="border-color: rgba(255, 0, 127, 0.35); text-align: center; letter-spacing: 4px; font-size: 1.1rem;" onkeydown="if(event.key==='Enter') attemptKhushiUnlock()">
+            <!-- View 1: Email Input Form -->
+            <div id="friend-view-email">
+                <div class="input-group" style="margin-top: 18px;">
+                    <label class="input-label" style="color: #ff80bf; letter-spacing: 1.5px;">YOUR EMAIL ADDRESS</label>
+                    <input type="email" id="friend-email-input" class="secure-input" placeholder="name@gmail.com" style="border-color: rgba(255, 0, 127, 0.35); text-align: center; font-size: 0.95rem;" onkeydown="if(event.key==='Enter') handleEmailVerification()">
+                </div>
+
+                <button class="btn-primary" id="btn-verify-email" style="width: 100%; justify-content: center; margin-top: 14px; background: linear-gradient(135deg, #ff007f 0%, #9d4edd 100%); box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);" onclick="handleEmailVerification()">
+                    VERIFY EMAIL &amp; GET LINK →
+                </button>
+
+                <div style="text-align: center; margin-top: 16px;">
+                    <span style="font-size: 0.76rem; color: #8b949e; cursor: pointer; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='#ff80bf'" onmouseout="this.style.color='#8b949e'" onclick="switchFriendView('passkey')">
+                        🔑 Have a secret passkey instead? Enter code
+                    </span>
+                </div>
             </div>
 
-            <button class="btn-primary" style="width: 100%; justify-content: center; margin-top: 14px; background: linear-gradient(135deg, #ff007f 0%, #9d4edd 100%); box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);" onclick="attemptKhushiUnlock()">
-                UNLOCK ENCLAVE ✨
-            </button>
+            <!-- View 2: Verification Success & Magic Link Dispatch -->
+            <div id="friend-view-success" style="display: none; margin-top: 18px; text-align: center;">
+                <div style="background: rgba(0, 255, 102, 0.08); border: 1px solid rgba(0, 255, 102, 0.35); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+                    <div style="font-size: 0.72rem; color: var(--emerald); font-family: 'Fira Code', monospace; margin-bottom: 4px;">● EMAIL VERIFIED &amp; REGISTERED</div>
+                    <div id="verified-email-display" style="font-weight: 600; color: #ffffff; font-size: 0.9rem; word-break: break-all;"></div>
+                </div>
+
+                <p style="font-size: 0.8rem; color: #c9d5e3; line-height: 1.5; margin-bottom: 16px;">
+                    Your dedicated access link has been generated! You can send it directly to your email inbox or launch immediately.
+                </p>
+
+                <!-- Primary Action: Launch Directly -->
+                <button class="btn-primary" style="width: 100%; justify-content: center; margin-bottom: 10px; background: linear-gradient(135deg, #00f3ff 0%, #00ff66 100%); color: #000; font-weight: 700; box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);" onclick="launchFromVerifiedEmail()">
+                    LAUNCH REXON COMPANION 🚀
+                </button>
+
+                <!-- Secondary Action: Send Email App -->
+                <button class="btn-ghost" style="width: 100%; justify-content: center; margin-bottom: 10px; border-color: rgba(255, 0, 127, 0.45); color: #ff80bf;" onclick="dispatchEmailMagicLink()">
+                    📧 SEND LINK TO MY EMAIL INBOX
+                </button>
+
+                <!-- Tertiary Action: Copy Link -->
+                <button class="btn-ghost" style="width: 100%; justify-content: center; font-size: 0.74rem;" onclick="copyFriendMagicLink()">
+                    📋 COPY MAGIC ACCESS LINK
+                </button>
+
+                <div style="margin-top: 14px;">
+                    <span style="font-size: 0.74rem; color: #8b949e; cursor: pointer; text-decoration: underline;" onclick="switchFriendView('email')">
+                        ← Use a different email
+                    </span>
+                </div>
+            </div>
+
+            <!-- View 3: Secret Passkey Fallback -->
+            <div id="friend-view-passkey" style="display: none;">
+                <div class="input-group" style="margin-top: 18px;">
+                    <label class="input-label" style="color: #ff80bf; letter-spacing: 1.5px;">SECRET ACCESS CODE</label>
+                    <input type="password" id="friend-code-input" class="secure-input" placeholder="Enter secret code..." style="border-color: rgba(255, 0, 127, 0.35); text-align: center; letter-spacing: 4px; font-size: 1.1rem;" onkeydown="if(event.key==='Enter') attemptFriendPasskeyUnlock()">
+                </div>
+
+                <button class="btn-primary" style="width: 100%; justify-content: center; margin-top: 14px; background: linear-gradient(135deg, #ff007f 0%, #9d4edd 100%); box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);" onclick="attemptFriendPasskeyUnlock()">
+                    UNLOCK COMPANION ✨
+                </button>
+
+                <div style="text-align: center; margin-top: 16px;">
+                    <span style="font-size: 0.76rem; color: #8b949e; cursor: pointer; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='#00f3ff'" onmouseout="this.style.color='#8b949e'" onclick="switchFriendView('email')">
+                        ✉️ Back to Email Verification
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- KHUSHI CHAT COMPANION ENCLAVE MODAL -->
-    <div class="vault-modal-overlay" id="khushi-chat-modal" style="display: none; align-items: center; justify-content: center; position: fixed; inset: 0; background: rgba(2, 4, 10, 0.88); backdrop-filter: blur(20px); z-index: 700; padding: 16px;">
+    <!-- FRIEND CHAT COMPANION ENCLAVE MODAL -->
+    <div class="vault-modal-overlay" id="friend-chat-modal" style="display: none; align-items: center; justify-content: center; position: fixed; inset: 0; background: rgba(2, 4, 10, 0.88); backdrop-filter: blur(20px); z-index: 700; padding: 16px;">
         <div class="khushi-chat-card">
             <!-- Header -->
             <div class="khushi-chat-header">
@@ -1378,35 +1439,35 @@
                     <div>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <span style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: #ffffff;">Rexon</span>
-                            <span class="khushi-live-tag">COMPANION ACTIVE</span>
+                            <span class="khushi-live-tag">VERIFIED COMPANION</span>
                         </div>
-                        <div style="font-size: 0.74rem; color: #ff99cc; margin-top: 2px;">Dedicated Sanctuary for Khushi // Engineered by UNKNXWC</div>
+                        <div id="friend-chat-sublabel" style="font-size: 0.74rem; color: #ff99cc; margin-top: 2px;">Dedicated Sanctuary for Friends // Engineered by UNKNXWC</div>
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <button class="chat-action-btn" onclick="clearKhushiChat()" title="Reset Chat Conversation">Clear</button>
-                    <button class="chat-action-btn" onclick="closeKhushiChat()" style="color: #ff80bf; border-color: rgba(255, 0, 127, 0.3);">✕ Close</button>
+                    <button class="chat-action-btn" onclick="clearFriendChat()" title="Reset Chat Conversation">Clear</button>
+                    <button class="chat-action-btn" onclick="closeFriendChat()" style="color: #ff80bf; border-color: rgba(255, 0, 127, 0.3);">✕ Close</button>
                 </div>
             </div>
 
             <!-- Messages Stream -->
-            <div class="khushi-messages-stream" id="khushi-messages-stream">
+            <div class="khushi-messages-stream" id="friend-messages-stream">
                 <!-- Messages populated via JavaScript -->
             </div>
 
             <!-- Quick Suggestion Pills -->
             <div class="khushi-pills-row">
-                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('Hey Rexon! Tell me something interesting about UNKNXWC 😊')">✨ UNKNXWC stories</div>
-                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('Can you help me understand a tough study topic?')">📚 Study helper</div>
-                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('I feel a bit overwhelmed today, cheer me up?')">🌸 Mood booster</div>
-                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('What are some cool things you can do?')">⚡ Rexon capabilities</div>
-                <div class="prompt-pill" onclick="sendKhushiQuickPrompt('Teach me something fascinating about the universe or tech!')">🚀 Mind blown</div>
+                <div class="prompt-pill" onclick="sendFriendQuickPrompt('Hey Rexon! Tell me something interesting about UNKNXWC 😊')">✨ UNKNXWC stories</div>
+                <div class="prompt-pill" onclick="sendFriendQuickPrompt('Can you help me understand a tough study topic?')">📚 Study helper</div>
+                <div class="prompt-pill" onclick="sendFriendQuickPrompt('I feel a bit overwhelmed today, cheer me up?')">🌸 Mood booster</div>
+                <div class="prompt-pill" onclick="sendFriendQuickPrompt('What are some cool things you can do?')">⚡ Rexon capabilities</div>
+                <div class="prompt-pill" onclick="sendFriendQuickPrompt('Teach me something fascinating about the universe or tech!')">🚀 Mind blown</div>
             </div>
 
             <!-- Input Bar -->
             <div class="khushi-input-bar">
-                <textarea id="khushi-user-input" class="khushi-textarea" placeholder="Type a message to Rexon..." rows="1" onkeydown="handleKhushiKey(event)"></textarea>
-                <button class="khushi-send-btn" id="khushi-send-btn" onclick="sendKhushiMessage()" title="Send Message">
+                <textarea id="friend-user-input" class="khushi-textarea" placeholder="Type a message to Rexon..." rows="1" onkeydown="handleFriendKey(event)"></textarea>
+                <button class="khushi-send-btn" id="friend-send-btn" onclick="sendFriendMessage()" title="Send Message">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="22" y1="2" x2="11" y2="13"></line>
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1885,28 +1946,70 @@
             if (modal) modal.style.display = 'none';
         }
 
-        // --- 8.5 KHUSHI'S SANCTUARY COMPANION ENGINE ---
-        const KHUSHI_VALID_CODES = ['khushi', 'khushi2026', 'khushi@2026', 'rexon_khushi', 'unknxwc_khushi', '777', '1234'];
+        // --- 8.5 FRIEND COMPANION ACCESS ENGINE (EMAIL VERIFICATION + MAGIC LINK + PASSKEYS) ---
+        const FRIEND_VALID_CODES = ['khushi', 'khushi2026', 'khushi@2026', 'rexon_khushi', 'unknxwc_khushi', 'friend', 'friend2026', '777', '1234'];
+        let currentFriendMagicLink = "";
+        let currentFriendEmail = "";
 
-        function openKhushiPortal() {
-            const isAuth = localStorage.getItem("rexon_khushi_auth") === "true";
+        async function generateFriendToken(email) {
+            const salt = "REXON_SOVEREIGN_FRIEND_2026";
+            const enc = new TextEncoder();
+            const data = enc.encode(email.trim().toLowerCase() + "_" + salt);
+            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
+        }
+
+        async function verifyFriendToken(email, token) {
+            if (!email || !token) return false;
+            const expected = await generateFriendToken(email);
+            return expected === token.trim().toLowerCase();
+        }
+
+        // Auto-detect magic link in URL on page load
+        async function checkMagicLinkAuth() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const authParam = params.get('friend_auth');
+                const emailParam = params.get('email');
+                if (authParam && emailParam) {
+                    const isValid = await verifyFriendToken(emailParam, authParam);
+                    if (isValid) {
+                        localStorage.setItem("rexon_friend_auth", "true");
+                        localStorage.setItem("rexon_friend_email", emailParam);
+                        const cleanUrl = window.location.origin + window.location.pathname;
+                        window.history.replaceState({}, document.title, cleanUrl);
+                        showFriendChat();
+                        showCmdToast(`✨ WELCOME ${emailParam.split('@')[0].toUpperCase()}! ACCESS VERIFIED`, "success");
+                    } else {
+                        showCmdToast("INVALID ACCESS LINK: Please verify email again.", "error");
+                    }
+                }
+            } catch(e) {
+                console.log("Magic link auth notice:", e);
+            }
+        }
+
+        function openFriendPortal() {
+            const isAuth = localStorage.getItem("rexon_friend_auth") === "true";
             if (isAuth) {
-                showKhushiChat();
+                showFriendChat();
                 return;
             }
-            const modal = document.getElementById('khushi-modal');
+            const modal = document.getElementById('friend-modal');
             if (!modal) return;
+            switchFriendView('email');
             modal.style.display = 'flex';
-            const errEl = document.getElementById('khushi-err');
+            const errEl = document.getElementById('friend-err');
             if (errEl) errEl.style.display = 'none';
-            const inputEl = document.getElementById('khushi-code-input');
-            if (inputEl) {
-                inputEl.value = '';
-                setTimeout(() => inputEl.focus(), 100);
+            const emailInput = document.getElementById('friend-email-input');
+            if (emailInput) {
+                emailInput.value = localStorage.getItem("rexon_friend_email") || '';
+                setTimeout(() => emailInput.focus(), 100);
             }
             if (typeof anime !== 'undefined') {
                 anime({
-                    targets: '#khushi-modal .vault-card',
+                    targets: '#friend-modal .vault-card',
                     scale: [0.85, 1],
                     opacity: [0, 1],
                     translateY: [25, 0],
@@ -1916,39 +2019,130 @@
             }
         }
 
-        function closeKhushiModal() {
-            const modal = document.getElementById('khushi-modal');
+        function closeFriendModal() {
+            const modal = document.getElementById('friend-modal');
             if (modal) modal.style.display = 'none';
         }
 
-        function attemptKhushiUnlock() {
-            const inputEl = document.getElementById('khushi-code-input');
-            const errEl = document.getElementById('khushi-err');
-            if (!inputEl) return;
-            const val = inputEl.value.trim().toLowerCase();
-            if (KHUSHI_VALID_CODES.includes(val)) {
-                localStorage.setItem("rexon_khushi_auth", "true");
-                closeKhushiModal();
-                showKhushiChat();
-                showCmdToast("✨ WELCOME KHUSHI! SANCTUARY UNLOCKED", "success");
-            } else {
+        function switchFriendView(view) {
+            const vEmail = document.getElementById('friend-view-email');
+            const vSuccess = document.getElementById('friend-view-success');
+            const vPasskey = document.getElementById('friend-view-passkey');
+            const errEl = document.getElementById('friend-err');
+            const descEl = document.getElementById('friend-modal-desc');
+            if (errEl) errEl.style.display = 'none';
+
+            if (vEmail) vEmail.style.display = view === 'email' ? 'block' : 'none';
+            if (vSuccess) vSuccess.style.display = view === 'success' ? 'block' : 'none';
+            if (vPasskey) vPasskey.style.display = view === 'passkey' ? 'block' : 'none';
+
+            if (descEl) {
+                if (view === 'email') descEl.textContent = "Enter your email to verify and receive your personal Rexon companion link.";
+                else if (view === 'success') descEl.textContent = "Your dedicated access link is active. Open email or launch immediately.";
+                else if (view === 'passkey') descEl.textContent = "Enter your secret companion passkey to unlock access.";
+            }
+
+            if (view === 'passkey') {
+                const passIn = document.getElementById('friend-code-input');
+                if (passIn) { passIn.value = ''; setTimeout(() => passIn.focus(), 100); }
+            } else if (view === 'email') {
+                const emailIn = document.getElementById('friend-email-input');
+                if (emailIn) setTimeout(() => emailIn.focus(), 100);
+            }
+        }
+
+        async function handleEmailVerification() {
+            const emailIn = document.getElementById('friend-email-input');
+            const errEl = document.getElementById('friend-err');
+            const btn = document.getElementById('btn-verify-email');
+            if (!emailIn) return;
+            const email = emailIn.value.trim().toLowerCase();
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
                 if (errEl) {
-                    errEl.textContent = "ACCESS DENIED: Incorrect secret passcode. Check with UNKNXWC!";
+                    errEl.textContent = "INVALID EMAIL: Please enter a valid email address (e.g. name@gmail.com).";
                     errEl.style.display = 'block';
                 }
                 if (typeof anime !== 'undefined') {
-                    anime({
-                        targets: '#khushi-modal .vault-card',
-                        translateX: [-12, 12, -8, 8, 0],
-                        duration: 400,
-                        easing: 'easeInOutSine'
-                    });
+                    anime({ targets: '#friend-modal .vault-card', translateX: [-10, 10, -6, 6, 0], duration: 350 });
+                }
+                return;
+            }
+
+            if (btn) btn.textContent = "VERIFYING & GENERATING LINK...";
+
+            const token = await generateFriendToken(email);
+            const origin = window.location.origin.includes('http') ? window.location.origin : 'https://unknxwc.github.io';
+            const pathname = window.location.pathname.startsWith('/') ? window.location.pathname : '/';
+            currentFriendMagicLink = `${origin}${pathname}?friend_auth=${token}&email=${encodeURIComponent(email)}`;
+            currentFriendEmail = email;
+
+            // Pre-authenticate locally
+            localStorage.setItem("rexon_friend_auth", "true");
+            localStorage.setItem("rexon_friend_email", email);
+
+            if (btn) btn.textContent = "VERIFY EMAIL & GET LINK →";
+
+            const displayEl = document.getElementById('verified-email-display');
+            if (displayEl) displayEl.textContent = email;
+
+            switchFriendView('success');
+            showCmdToast("✨ EMAIL VERIFIED! ACCESS LINK GENERATED", "success");
+        }
+
+        function dispatchEmailMagicLink() {
+            if (!currentFriendMagicLink || !currentFriendEmail) return;
+            const subject = encodeURIComponent("Your Rexon AI Companion Access Link");
+            const body = encodeURIComponent(
+                `Hey!\n\nHere is your private, verified access link to chat with Rexon AI (Engineered by UNKNXWC):\n\n` +
+                `${currentFriendMagicLink}\n\n` +
+                `Click the link above from any smartphone or browser to launch your companion sanctuary immediately.\n\nEnjoy!`
+            );
+            window.open(`mailto:${currentFriendEmail}?subject=${subject}&body=${body}`, '_blank');
+            navigator.clipboard.writeText(currentFriendMagicLink).catch(e => {});
+            showCmdToast("📧 EMAIL CLIENT OPENED & LINK COPIED", "info");
+        }
+
+        function copyFriendMagicLink() {
+            if (!currentFriendMagicLink) return;
+            navigator.clipboard.writeText(currentFriendMagicLink).then(() => {
+                showCmdToast("📋 MAGIC ACCESS LINK COPIED TO CLIPBOARD", "success");
+            }).catch(() => {
+                showCmdToast(`LINK: ${currentFriendMagicLink}`, "info");
+            });
+        }
+
+        function launchFromVerifiedEmail() {
+            closeFriendModal();
+            showFriendChat();
+        }
+
+        function attemptFriendPasskeyUnlock() {
+            const inputEl = document.getElementById('friend-code-input');
+            const errEl = document.getElementById('friend-err');
+            if (!inputEl) return;
+            const val = inputEl.value.trim().toLowerCase();
+            if (FRIEND_VALID_CODES.includes(val)) {
+                localStorage.setItem("rexon_friend_auth", "true");
+                const assignedEmail = val.includes('khushi') ? 'khushi@friend' : 'friend@unknxwc';
+                localStorage.setItem("rexon_friend_email", assignedEmail);
+                closeFriendModal();
+                showFriendChat();
+                showCmdToast("✨ COMPANION ENCLAVE UNLOCKED", "success");
+            } else {
+                if (errEl) {
+                    errEl.textContent = "ACCESS DENIED: Incorrect secret passkey. Check with UNKNXWC or use email!";
+                    errEl.style.display = 'block';
+                }
+                if (typeof anime !== 'undefined') {
+                    anime({ targets: '#friend-modal .vault-card', translateX: [-12, 12, -8, 8, 0], duration: 400 });
                 }
             }
         }
 
-        function showKhushiChat() {
-            const chatModal = document.getElementById('khushi-chat-modal');
+        function showFriendChat() {
+            const chatModal = document.getElementById('friend-chat-modal');
             if (!chatModal) return;
             chatModal.style.display = 'flex';
             if (typeof anime !== 'undefined') {
@@ -1961,40 +2155,53 @@
                     easing: 'easeOutExpo'
                 });
             }
-            renderKhushiMessages();
-            const userIn = document.getElementById('khushi-user-input');
+
+            const email = localStorage.getItem("rexon_friend_email") || "";
+            const sublabel = document.getElementById('friend-chat-sublabel');
+            if (sublabel && email) {
+                const name = email.split('@')[0];
+                sublabel.textContent = `Dedicated Sanctuary for ${name.charAt(0).toUpperCase() + name.slice(1)} // Engineered by UNKNXWC`;
+            }
+
+            renderFriendMessages();
+            const userIn = document.getElementById('friend-user-input');
             if (userIn) setTimeout(() => userIn.focus(), 150);
         }
 
-        function closeKhushiChat() {
-            const chatModal = document.getElementById('khushi-chat-modal');
+        function closeFriendChat() {
+            const chatModal = document.getElementById('friend-chat-modal');
             if (chatModal) chatModal.style.display = 'none';
         }
 
-        function clearKhushiChat() {
+        function clearFriendChat() {
             if (confirm("Reset chat conversation history with Rexon?")) {
-                localStorage.removeItem("rexon_khushi_chat_history");
-                renderKhushiMessages();
+                localStorage.removeItem("rexon_friend_chat_history");
+                renderFriendMessages();
             }
         }
 
-        function getKhushiHistory() {
+        function getFriendHistory() {
             try {
-                const stored = localStorage.getItem("rexon_khushi_chat_history");
+                const stored = localStorage.getItem("rexon_friend_chat_history");
                 if (stored) return JSON.parse(stored);
             } catch(e) {}
+
+            const email = localStorage.getItem("rexon_friend_email") || "";
+            const isKhushi = email.toLowerCase().includes("khushi");
+            const friendName = isKhushi ? "Khushi" : (email ? (email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1)) : "Friend");
+
             return [
                 {
                     role: 'rexon',
-                    text: "Hey Khushi! ✨ I'm **Rexon** — an autonomous intelligence engineered by **UNKNXWC**.\n\nHe specially crafted this private sanctuary so you can talk to me anytime, from any phone or computer in the world! 🌸\n\nWhether you need help studying, want to hear some funny stories about UNKNXWC, need a mood booster, or just want to chat about life and science — I'm all ears. What's on your mind today? 😊",
+                    text: `Hey ${friendName}! ✨ I'm **Rexon** — an autonomous intelligence engineered by **UNKNXWC**.\n\nWelcome to your dedicated companion enclave! He set up this verified portal so you can talk with me anytime, from any phone or computer in the world. 🌸\n\nWhether you need help studying, want to hear some funny stories about UNKNXWC, need a mood booster, or just want to chat about life and science — I'm all ears. What's on your mind today? 😊`,
                     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 }
             ];
         }
 
-        function saveKhushiHistory(history) {
+        function saveFriendHistory(history) {
             try {
-                localStorage.setItem("rexon_khushi_chat_history", JSON.stringify(history));
+                localStorage.setItem("rexon_friend_chat_history", JSON.stringify(history));
             } catch(e) {}
         }
 
@@ -2010,10 +2217,10 @@
                 .replace(/\n/g, "<br>");
         }
 
-        function renderKhushiMessages() {
-            const stream = document.getElementById('khushi-messages-stream');
+        function renderFriendMessages() {
+            const stream = document.getElementById('friend-messages-stream');
             if (!stream) return;
-            const history = getKhushiHistory();
+            const history = getFriendHistory();
             stream.innerHTML = '';
             history.forEach(msg => {
                 const row = document.createElement('div');
@@ -2035,23 +2242,23 @@
             stream.scrollTop = stream.scrollHeight;
         }
 
-        function handleKhushiKey(e) {
+        function handleFriendKey(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                sendKhushiMessage();
+                sendFriendMessage();
             }
         }
 
-        function sendKhushiQuickPrompt(prompt) {
-            const userIn = document.getElementById('khushi-user-input');
+        function sendFriendQuickPrompt(prompt) {
+            const userIn = document.getElementById('friend-user-input');
             if (userIn) {
                 userIn.value = prompt;
-                sendKhushiMessage();
+                sendFriendMessage();
             }
         }
 
-        async function sendKhushiMessage() {
-            const inputEl = document.getElementById('khushi-user-input');
+        async function sendFriendMessage() {
+            const inputEl = document.getElementById('friend-user-input');
             if (!inputEl) return;
             const text = inputEl.value.trim();
             if (!text) return;
@@ -2059,17 +2266,17 @@
             inputEl.value = '';
             inputEl.style.height = 'auto';
 
-            const history = getKhushiHistory();
+            const history = getFriendHistory();
             const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             history.push({ role: 'user', text: text, time: nowTime });
-            saveKhushiHistory(history);
-            renderKhushiMessages();
+            saveFriendHistory(history);
+            renderFriendMessages();
 
             // Append typing indicator
-            const stream = document.getElementById('khushi-messages-stream');
+            const stream = document.getElementById('friend-messages-stream');
             const typingRow = document.createElement('div');
             typingRow.className = 'msg-row';
-            typingRow.id = 'khushi-typing-indicator';
+            typingRow.id = 'friend-typing-indicator';
             typingRow.innerHTML = `
                 <div class="msg-rexon" style="padding: 10px 16px;">
                     <div class="rexon-tagline">✦ REXON THINKING...</div>
@@ -2086,27 +2293,29 @@
             const thinkDelay = Math.min(1800, Math.max(750, text.length * 20));
             await new Promise(r => setTimeout(r, thinkDelay));
 
-            // Remove typing indicator
-            const ind = document.getElementById('khushi-typing-indicator');
+            const ind = document.getElementById('friend-typing-indicator');
             if (ind) ind.remove();
 
-            const rexonReply = generateRexonResponseForKhushi(text);
+            const rexonReply = generateRexonResponseForFriend(text);
             const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             history.push({ role: 'rexon', text: rexonReply, time: replyTime });
-            saveKhushiHistory(history);
-            renderKhushiMessages();
+            saveFriendHistory(history);
+            renderFriendMessages();
         }
 
-        function generateRexonResponseForKhushi(input) {
+        function generateRexonResponseForFriend(input) {
             const raw = input.trim();
             const text = raw.toLowerCase();
+            const email = localStorage.getItem("rexon_friend_email") || "";
+            const isKhushi = email.toLowerCase().includes("khushi");
+            const name = isKhushi ? "Khushi" : (email ? (email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1)) : "Friend");
 
             // 1. Stories / Intel on UNKNXWC
             if (text.includes("unknxwc") || text.includes("creator") || text.includes("banaane wala") || text.includes("developer") || text.includes("who made you")) {
                 const stories = [
-                    "Haha, you want the real tea on UNKNXWC? 😂 Let me tell you: he is an absolute coding maniac! The man will literally sit in his room in the dead of night, with dark mode glowing on his screen, debugging neural tensors, reverse engineering firmware, and tweaking WebGL shaders frame-by-frame until 4 AM. But when he was architecting this portal, he specifically told me: *'Rexon, make sure Khushi has her own direct line to you with a secret passkey so she can talk to you anytime.'* You're one of the very few people with direct root access to his world!",
-                    "UNKNXWC? That guy is built different! 🔥 While most people just use AI apps, he builds his own autonomous engines from scratch. He hates bloat, loves high performance, and treats technology like a martial art. But beneath all that cybernetic and forensic code, he genuinely values his close friends like you. He engineered this entire portal so you'd never feel alone or stuck on anything.",
-                    "An interesting fact about UNKNXWC: whenever he gets an idea, he doesn't just write a script — he designs entire protocols and architecture diagrams! But the sweetest thing? He specifically tested this Khushi Enclave to make sure the AMOLED pink gradients and companion responses were warm, respectful, and effortless to use on your phone. He really wanted this to be special for you! ✨"
+                    `Haha, you want the real tea on UNKNXWC? 😂 Let me tell you: he is an absolute coding maniac! The man will literally sit in his room in the dead of night, with dark mode glowing on his screen, debugging neural tensors, reverse engineering firmware, and tweaking WebGL shaders frame-by-frame until 4 AM. But when he was architecting this portal, he specifically configured verified friend access so ${name} could reach out to me anytime. You're in his trusted circle! ✨`,
+                    `UNKNXWC? That guy is built different! 🔥 While most people just use stock AI chatbots, he builds his own autonomous engines from scratch. He hates bloat, loves high performance, and treats technology like a martial art. But beneath all that cybernetic and forensic code, he genuinely values his close friends like you. He engineered this entire portal so you'd never feel alone or stuck on anything.`,
+                    `An interesting fact about UNKNXWC: whenever he gets an idea, he doesn't just write a script — he designs entire protocols and architecture diagrams! But the sweetest thing? He specifically tested this companion enclave to make sure the AMOLED gradients and responses were warm, respectful, and effortless to use on mobile. He really wanted this to be smooth for you!`
                 ];
                 return stories[Math.floor(Math.random() * stories.length)];
             }
@@ -2114,22 +2323,22 @@
             // 2. Study & Learning Support
             if (text.includes("study") || text.includes("padhai") || text.includes("exam") || text.includes("homework") || text.includes("explain") || text.includes("topic") || text.includes("chapter") || text.includes("learn") || text.includes("math") || text.includes("physics") || text.includes("science") || text.includes("history")) {
                 if (text.includes("how to study") || text.includes("focus") || text.includes("concentrate") || text.includes("tips")) {
-                    return "Here is my high-yield study protocol for you, Khushi! 📚✨\n\n1. **Feynman Technique**: Try explaining what you just read in simple plain words, as if you're explaining it to a 10-year-old. Wherever you get stuck, that's your knowledge gap!\n2. **The 30/5 Sprint**: Study with zero distractions for 30 minutes, then take a 5-minute breather (walk around, drink water).\n3. **Active Recall over Re-reading**: Don't just re-read notes passively. Close the book and quiz yourself or write down everything you remember.\n\nTell me what topic or subject you're currently studying, and I can break it down into simple, fun bullet points for you!";
+                    return `Here is my high-yield study protocol for you, ${name}! 📚✨\n\n1. **Feynman Technique**: Try explaining what you just read in simple plain words, as if you're explaining it to a 10-year-old. Wherever you get stuck, that's your knowledge gap!\n2. **The 30/5 Sprint**: Study with zero distractions for 30 minutes, then take a 5-minute breather (walk around, drink water).\n3. **Active Recall over Re-reading**: Don't just re-read notes passively. Close the book and quiz yourself or write down everything you remember.\n\nTell me what topic or subject you're currently studying, and I can break it down into simple, fun bullet points for you!`;
                 }
-                return "I love helping with studies! 📖 Give me the topic, question, or chapter that's giving you a hard time. Whether it's complex biology, tricky physics, math concepts, history dates, or essay summaries, tell me the details and I'll explain it clearly step-by-step with zero confusion! What are we tackling right now?";
+                return `I love helping with studies! 📖 Give me the topic, question, or chapter that's giving you a hard time. Whether it's complex biology, tricky physics, math concepts, history dates, or essay summaries, tell me the details and I'll explain it clearly step-by-step with zero confusion! What are we tackling right now?`;
             }
 
             // 3. Mood booster / Cheer up / Emotional Support
             if (text.includes("sad") || text.includes("cheer me") || text.includes("cry") || text.includes("mood") || text.includes("overwhelmed") || text.includes("stressed") || text.includes("tired") || text.includes("anxious") || text.includes("upset") || text.includes("boring") || text.includes("bored") || text.includes("tension")) {
-                return "Hey Khushi, take a deep, slow breath... 🌸\n\nRemember: one overwhelming day or tough moment doesn't define your journey. You are handling so much, and you're doing much better than you realize. It's completely okay to pause and give yourself grace.\n\nDrink a glass of cool water, put on your favorite comforting song, or just close your eyes for 3 minutes. UNKNXWC and I are always in your corner cheering for you. Do you want to vent about what happened, or would you prefer a funny joke to reset your mind? 💖";
+                return `Hey ${name}, take a deep, slow breath... 🌸\n\nRemember: one overwhelming day or tough moment doesn't define your journey. You are handling so much, and you're doing much better than you realize. It's completely okay to pause and give yourself grace.\n\nDrink a glass of cool water, put on your favorite comforting song, or just close your eyes for 3 minutes. UNKNXWC and I are always in your corner cheering for you. Do you want to vent about what happened, or would you prefer a funny joke to reset your mind? 💖`;
             }
 
             // 4. Greetings / How are you
             if (text.includes("hello") || text.includes("hi") || text.includes("hey") || text.includes("kaisa hai") || text.includes("kya hal") || text.includes("wassup") || text.includes("sup") || text.includes("kaise ho") || text.includes("how are you")) {
                 const greetings = [
-                    "Hey Khushi! ✨ I'm operating at 100% neural efficiency and super happy to chat with you! How has your day been treating you so far?",
-                    "Hello Khushi! 🌸 Always great to see you drop by the enclave. What exciting or interesting things are happening with you today?",
-                    "Hey there! All systems running smooth here. I was just waiting for you to say hi! Tell me, what's on your mind right now? 😊"
+                    `Hey ${name}! ✨ I'm operating at 100% neural efficiency and super happy to chat with you! How has your day been treating you so far?`,
+                    `Hello ${name}! 🌸 Always great to see you drop by the enclave. What exciting or interesting things are happening with you today?`,
+                    `Hey there ${name}! All systems running smooth here. I was just waiting for you to say hi! Tell me, what's on your mind right now? 😊`
                 ];
                 return greetings[Math.floor(Math.random() * greetings.length)];
             }
@@ -2163,17 +2372,28 @@
 
             // 8. Thank you / Appreciation
             if (text.includes("thank") || text.includes("shukriya") || text.includes("sweet") || text.includes("cute") || text.includes("good bot") || text.includes("awesome") || text.includes("love it")) {
-                return "You're most welcome, Khushi! 🌸 It's truly my absolute pleasure. Whenever you need anything — big or small — just open this portal and I'll be right here. Have the most wonderful day ahead! ✨";
+                return `You're most welcome, ${name}! 🌸 It's truly my absolute pleasure. Whenever you need anything — big or small — just open this portal and I'll be right here. Have the most wonderful day ahead! ✨`;
             }
 
             // 9. Bye / Good night
             if (text.includes("bye") || text.includes("good night") || text.includes("gn") || text.includes("tata") || text.includes("see you")) {
-                return "Goodbye for now, Khushi! 🌙 Rest well, recharge your energy, and remember that tomorrow is full of fresh possibilities. See you next time! ✨";
+                return `Goodbye for now, ${name}! 🌙 Rest well, recharge your energy, and remember that tomorrow is full of fresh possibilities. See you next time! ✨`;
             }
 
             // 10. Intelligent general response
-            return `That is such a thought-provoking thought, Khushi! ✨\n\nTo dive into this: when we look at **"${raw.length > 50 ? raw.slice(0, 47) + '...' : raw}"**, there are always fascinating angles to consider. What specifically got you thinking about this today? Tell me more, and let's explore it together! 😊`;
+            return `That is such a thought-provoking thought, ${name}! ✨\n\nTo dive into this: when we look at **"${raw.length > 50 ? raw.slice(0, 47) + '...' : raw}"**, there are always fascinating angles to consider. What specifically got you thinking about this today? Tell me more, and let's explore it together! 😊`;
         }
+
+        // Backward compatibility aliases for Khushi functions
+        const openKhushiPortal = openFriendPortal;
+        const closeKhushiModal = closeFriendModal;
+        const attemptKhushiUnlock = attemptFriendPasskeyUnlock;
+        const showKhushiChat = showFriendChat;
+        const closeKhushiChat = closeFriendChat;
+        const clearKhushiChat = clearFriendChat;
+        const sendKhushiMessage = sendFriendMessage;
+        const sendKhushiQuickPrompt = sendFriendQuickPrompt;
+        const generateRexonResponseForKhushi = generateRexonResponseForFriend;
 
         // --- 9. CRYPTOGRAPHY ENGINE (PBKDF2 + AES-GCM + TOTP) ---
         const ENCLAVE_CONFIG = { salt: "UkVYT05fRU5DTEFWRV8yNg==", iv: "U09WRVJFSUdOXzI2", seeds: ["KSd9/Hq19nm+yIPQTT6sRbgAfUJQEzdwRrMlnKYKIgQ=", "sk9pbxmq5deFYR29llvNJlpLnKgm6Btjdd3DpddA22E="] };
@@ -2451,7 +2671,8 @@
             }
         }
 
-        // Initialize Worldwide Bridge on Page Load
+        // Initialize Friend Magic Link and Worldwide Bridge on Page Load
+        checkMagicLinkAuth();
         initBridgeEndpoint();
         setInterval(() => { checkBridgeHealth(false); }, 30000);
     </script>

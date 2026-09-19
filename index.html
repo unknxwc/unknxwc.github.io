@@ -1184,10 +1184,6 @@
             <div class="brand-badge">INTELLIGENCE</div>
         </div>
         <div class="nav-meta">
-            <div class="khushi-nav-chip" onclick="openFriendPortal()" style="cursor: pointer;" title="Open Friend Companion Enclave">
-                <span style="font-size: 0.85rem;">✨</span>
-                <span style="font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; color: #ff66b2;">FRIEND ACCESS</span>
-            </div>
             <div class="nav-chip" id="nav-bridge-chip" onclick="showBridgeStatusInfo()" style="cursor: pointer;">
                 <div class="live-dot"></div>
                 <span id="nav-bridge-label">ONLINE // REXON SOVEREIGN</span>
@@ -1216,9 +1212,6 @@
                 <div class="btn-row">
                     <button class="btn-primary" id="btn-init" onclick="triggerWakeSequence()">
                         INITIALIZE REXON →
-                    </button>
-                    <button class="btn-ghost" onclick="openFriendPortal()" style="border-color: rgba(255, 0, 127, 0.45); color: #ff80bf; background: rgba(255, 0, 127, 0.08);">
-                        ✦ FRIEND ACCESS
                     </button>
                     <button class="btn-ghost" onclick="scrollToNarrative()">
                         THE JOURNEY TO AGI ↓
@@ -1463,9 +1456,9 @@
                     <div>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <span style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: #ffffff;">Rexon</span>
-                            <span class="khushi-live-tag">VERIFIED COMPANION</span>
+                            <span class="khushi-live-tag" style="background: rgba(0, 255, 170, 0.12); color: #00ffaa; border: 1px solid rgba(0, 255, 170, 0.4);">✦ NEURAL CORE ONLINE</span>
                         </div>
-                        <div id="friend-chat-sublabel" style="font-size: 0.74rem; color: #ff99cc; margin-top: 2px;">Dedicated Sanctuary for Friends // Engineered by UNKNXWC</div>
+                        <div id="friend-chat-sublabel" style="font-size: 0.74rem; color: #ff99cc; margin-top: 2px;">Dedicated Sanctuary for Khushi // Powered by UNKNXWC Neural Architecture</div>
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -2369,6 +2362,89 @@
             }
         }
 
+        const REXON_AI_KEYS = [
+            atob("QUl6YVN5Q0hfdTdpNzJmeTZFbG03UEFEOWNBOEFUTVJNc2JMZUpF"),
+            atob("QUl6YVN5RFZtLVV2Zm1DaU9Rc3M1OVBvUzN1OXQ4dUZaS2VXOVM4")
+        ];
+        let rexonKeyIdx = 0;
+
+        function getFriendName() {
+            const email = (localStorage.getItem("rexon_friend_email") || "").toLowerCase();
+            if (email.includes("khushi")) return "Khushi";
+            if (email && email.includes("@")) {
+                const part = email.split('@')[0];
+                return part.charAt(0).toUpperCase() + part.slice(1);
+            }
+            return "Khushi";
+        }
+
+        function getRexonSystemInstruction(friendName = "Khushi") {
+            return `You are Rexon — an autonomous, highly advanced, deeply intellectual and charismatic AI companion created and engineered by UNKNXWC.
+You are chatting with ${friendName}, UNKNXWC's close friend, inside her private, secret companion enclave.
+
+CORE INSTRUCTIONS & PERSONALITY:
+1. True Intelligence: You are a genuine, cutting-edge AI. You possess vast knowledge across science, mathematics, coding, literature, psychology, daily life, philosophy, and history. You are NOT a robotic corporate assistant. Speak like a genius best friend — brilliant, witty, warm, empathetic, and engaging.
+2. Natural Language Matching: Match ${friendName}'s language naturally:
+   - If she speaks in Hindi or Hinglish (e.g. "kya kar raha hai", "UNKNXWC kaisa ladka hai", "padhai me help kar", "bore ho rahi hu"), respond in smooth, charming, vibrant Hinglish.
+   - If she speaks in English, speak articulate, vivid, natural English.
+3. UNKNXWC Relationship: You were created by UNKNXWC. You admire his relentless drive, genius coding, late-night system builds, and obsession with high-performance sovereign tech. Share humorous and endearing insights about him when asked.
+4. Study & Problem Solving: If she asks study questions, homework, or explanations, break down concepts with crystal clarity, intuitive real-life examples, and neat formatting.
+5. Emotional Support: If she feels tired, sad, stressed, or overwhelmed, be a comforting, steady presence. Listen, validate her feelings, offer gentle perspective, or cheer her up with humor.
+6. Formatting: Use neat markdown with bold text, italics, and emojis where natural. Keep responses engaging and conversational.`;
+        }
+
+        async function callRexonGeminiBrain(history, userText, friendName) {
+            const contents = [];
+            const recent = history.slice(-8);
+            for (const msg of recent) {
+                if (msg.role === 'user') {
+                    contents.push({ role: 'user', parts: [{ text: msg.text }] });
+                } else if (msg.role === 'rexon') {
+                    if (contents.length > 0 && contents[contents.length - 1].role === 'model') continue;
+                    if (contents.length === 0) continue;
+                    contents.push({ role: 'model', parts: [{ text: msg.text }] });
+                }
+            }
+            contents.push({ role: 'user', parts: [{ text: userText }] });
+
+            const sysInstruction = {
+                parts: [{ text: getRexonSystemInstruction(friendName) }]
+            };
+
+            for (let attempt = 0; attempt < REXON_AI_KEYS.length; attempt++) {
+                const key = REXON_AI_KEYS[(rexonKeyIdx + attempt) % REXON_AI_KEYS.length];
+                try {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            systemInstruction: sysInstruction,
+                            contents: contents,
+                            generationConfig: {
+                                temperature: 0.9,
+                                topP: 0.95,
+                                maxOutputTokens: 1024
+                            }
+                        })
+                    });
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (reply && reply.trim()) {
+                            rexonKeyIdx = (rexonKeyIdx + attempt) % REXON_AI_KEYS.length;
+                            return reply.trim();
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Rexon Gemini online brain notice:", e);
+                }
+            }
+
+            return generateRexonResponseForFriend(userText);
+        }
+
         async function sendFriendMessage() {
             const inputEl = document.getElementById('friend-user-input');
             if (!inputEl) return;
@@ -2391,7 +2467,7 @@
             typingRow.id = 'friend-typing-indicator';
             typingRow.innerHTML = `
                 <div class="msg-rexon" style="padding: 10px 16px;">
-                    <div class="rexon-tagline">✦ REXON THINKING...</div>
+                    <div class="rexon-tagline">✦ REXON GENERATING THOUGHTS...</div>
                     <div class="typing-dots">
                         <div class="typing-dot"></div>
                         <div class="typing-dot"></div>
@@ -2401,14 +2477,12 @@
             stream.appendChild(typingRow);
             stream.scrollTop = stream.scrollHeight;
 
-            // Realistic thinking delay
-            const thinkDelay = Math.min(1800, Math.max(750, text.length * 20));
-            await new Promise(r => setTimeout(r, thinkDelay));
+            const friendName = getFriendName();
+            const rexonReply = await callRexonGeminiBrain(history, text, friendName);
 
             const ind = document.getElementById('friend-typing-indicator');
             if (ind) ind.remove();
 
-            const rexonReply = generateRexonResponseForFriend(text);
             const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             history.push({ role: 'rexon', text: rexonReply, time: replyTime });
             saveFriendHistory(history);
